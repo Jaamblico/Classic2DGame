@@ -29,9 +29,11 @@ function setup() {
     playerSprite.addAni('right','assets/walkingRight1.png','assets/walkingRight2.png')
     playerSprite.addAni('jumping', 'assets/jumping.png');
 	playerSprite.width = 60;
-	playerSprite.debug = false;
+	playerSprite.debug = true;
 	playerSprite.scale = 1.5;
 	playerSprite.x = 900;
+	playerSprite.w = 70;
+	playerSprite.h = 80;
 	//playerSprite.gravityScale = 0.5;
 	playerSprite.mass = 1;
     floor = new Sprite(width/2,windowHeight+10,windowWidth,50,STATIC);
@@ -43,6 +45,8 @@ function setup() {
     key.y = 100;
     key.static = true;
     key.scale = 0.6;
+	key.debug = true;
+	key.h = 70;
 
 	plataformas = new Group();
 	plataformas.color = 'red';
@@ -50,12 +54,14 @@ function setup() {
 	while (plataformas.length < 3) {
 		let plataforma = new plataformas.Sprite();
 		plataforma.x = plataformas.length * 200;
-		plataforma.y = plataformas.length * 120+200;
+		plataforma.y = plataformas.length * height/6+200;
 		plataforma.addAni('plataforma','assets/metalPlatform.png');
 		plataforma.scale = 0.5;
-		plataforma.debug = false;
+		plataforma.debug = true;
 		plataforma.width = 100;
 		plataforma.static = true;
+		plataforma.w = 160;
+		plataforma.h = 50;
 	}
 
 	obstacles = new Group();
@@ -74,6 +80,7 @@ function setup() {
 	obstacles[1].x = 320;
 	obstacles[2].x = 110;
 	print(obstacles[0]);
+	print(height)
 }
 
 function update() {
