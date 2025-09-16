@@ -138,9 +138,9 @@ function update() {
     }
 
     if(obstaclesSwitch == true){
-    	obstacles[0].static = false;
-    	obstacles[1].static = false;
-    	obstacles[2].static = false;
+    	//obstacles[0].static = false;
+    	//obstacles[1].static = false;
+    	//obstacles[2].static = false;
     }
 
     for(var i = 0; i<obstacles.length;i++){
@@ -204,5 +204,6 @@ function update() {
    	obstacles[2].x = -1000;
    }
 }
+
 
 
