@@ -32,8 +32,6 @@ function setup() {
 	playerSprite.debug = false;
 	playerSprite.scale = 1.5;
 	playerSprite.x = 900;
-	playerSprite.w = 70;
-	playerSprite.h = 80;
 	//playerSprite.gravityScale = 0.5;
 	playerSprite.mass = 1;
     floor = new Sprite(width/2,windowHeight+10,windowWidth,50,STATIC);
@@ -42,11 +40,9 @@ function setup() {
     key = new Sprite();
     key.addAni('key','assets/key.png');
     key.x = 80;
-    key.y = 100;
+    key.y = 300;
     key.static = true;
     key.scale = 0.6;
-	key.debug = false;
-	key.h = 70;
 
 	plataformas = new Group();
 	plataformas.color = 'red';
@@ -54,7 +50,7 @@ function setup() {
 	while (plataformas.length < 3) {
 		let plataforma = new plataformas.Sprite();
 		plataforma.x = plataformas.length * 200;
-		plataforma.y = plataformas.length * height/6+200;
+		plataforma.y = plataformas.length * 120+350;
 		plataforma.addAni('plataforma','assets/metalPlatform.png');
 		plataforma.scale = 0.5;
 		plataforma.debug = false;
@@ -63,6 +59,7 @@ function setup() {
 		plataforma.w = 160;
 		plataforma.h = 50;
 	}
+	print(plataformas[0]);
 
 	obstacles = new Group();
 	while (obstacles.length < 3){
@@ -79,8 +76,7 @@ function setup() {
 	obstacles[0].x = 470;
 	obstacles[1].x = 320;
 	obstacles[2].x = 110;
-	print(obstacles[0]);
-	print(height)
+	
 }
 
 function update() {
@@ -114,7 +110,6 @@ function update() {
     if (playerSprite.collides(floor)||playerSprite.collides(plataformas)) {
         //playerSprite.velocity.y = 0;
         jumpSwitch = true;
-		obstaclesSwitch = true;
     }
 
     if(playerSprite.collides(plataformas[2])){
@@ -137,14 +132,16 @@ function update() {
     	obstaclesSwitch = false;
     }
 
-    if(obstaclesSwitch == true){
-    	//obstacles[0].static = false;
-    	//obstacles[1].static = false;
-    	//obstacles[2].static = false;
-    }
+    if (obstaclesSwitch) {
+		for (let i = 0; i < obstacles.length; i++) {
+			if (obstacles[i]) {
+				obstacles[i].static = false;
+			}
+		}
+	}
 
     for(var i = 0; i<obstacles.length;i++){
-    	if(obstacles.collides(floor)){
+    	if(obstacles[i].collides(floor)){
     		obstacles[i].y = -800;
     	}
     }
@@ -204,6 +201,3 @@ function update() {
    	obstacles[2].x = -1000;
    }
 }
-
-
-
