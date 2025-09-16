@@ -57,7 +57,7 @@ function setup() {
 		plataforma.width = 100;
 		plataforma.static = true;
 		plataforma.w = 160;
-		plataforma.h = 50;
+		plataforma.h = 40;
 	}
 	print(plataformas[0]);
 
@@ -201,4 +201,3 @@ function update() {
    	obstacles[2].x = -1000;
    }
 }
-
