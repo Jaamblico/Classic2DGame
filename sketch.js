@@ -114,6 +114,7 @@ function update() {
     if (playerSprite.collides(floor)||playerSprite.collides(plataformas)) {
         //playerSprite.velocity.y = 0;
         jumpSwitch = true;
+		obstaclesSwitch = true;
     }
 
     if(playerSprite.collides(plataformas[2])){
@@ -203,4 +204,5 @@ function update() {
    	obstacles[2].x = -1000;
    }
 }
+
 
