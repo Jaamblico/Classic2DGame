@@ -13,6 +13,11 @@ let heart;
 let lives = 3;
 let gameOver;
 let gameOverSwitch = false;
+let serial;
+let portName = 'COM3'; 
+let joyX = 0;
+let joyY = 0;
+let joyBtn = 1;  // 0 = presionado
 
 function preload(){
 backgroundImg = loadImage("assets/back2.png");
@@ -31,10 +36,10 @@ function setup() {
 	playerSprite.width = 60;
 	playerSprite.debug = false;
 	playerSprite.scale = 1.5;
-	playerSprite.x = 900;
+	playerSprite.x = 1000;
 	//playerSprite.gravityScale = 0.5;
 	playerSprite.mass = 1;
-    floor = new Sprite(width/2,windowHeight+10,windowWidth,50,STATIC);
+    floor = new Sprite(width/2,windowHeight+10,windowWidth*2,50,STATIC);
 	floor.opacity = 0;
     world.gravity.y = gravity;
     key = new Sprite();
@@ -49,8 +54,8 @@ function setup() {
 	
 	while (plataformas.length < 3) {
 		let plataforma = new plataformas.Sprite();
-		plataforma.x = plataformas.length * 210;
-		plataforma.y = plataformas.length * 120+350;
+		plataforma.x = plataformas.length * 190;
+		plataforma.y = plataformas.length * height/6+250;
 		plataforma.addAni('plataforma','assets/metalPlatform.png');
 		plataforma.scale = 0.5;
 		plataforma.debug = false;
@@ -77,12 +82,61 @@ function setup() {
 	obstacles[1].x = 320;
 	obstacles[2].x = 110;
 	
+	//Serial Port
+	serial = new p5.SerialPort(); // make a new instance of the serialport library
+  	//serial.on('list', printList); // set a callback function for the serialport list event
+	serial.on('connected', serverConnected); // callback for connecting to the server
+  	serial.on('open', portOpen);        // callback for the port opening
+  	serial.on('data', gotData);     // callback for when new data arrives
+  	serial.on('error', serialError);    // callback for errors
+  	serial.on('close', portClose);      // callback for the port closing
+ 
+  	serial.list();                      // list the serial ports
+  	serial.open(portName);
+ 
+  	serial.list(); 
+}
+
+function printList(portList) {
+  // portList is an array of serial port names
+  for (var i = 0; i < portList.length; i++) {
+    // Display the list the console:
+    console.log(i + portList[i]);
+  }
+}
+
+function serverConnected() {
+  console.log('connected to server.');
+}
+ 
+function portOpen() {
+  console.log('the serial port opened.')
+}
+ 
+function gotData() {
+  let data = serial.readLine().trim(); 
+  if (data.length > 0) {
+    let parts = data.split(",");
+    if (parts.length === 3) {
+      joyX = map(Number(parts[0]), 0, 1023, -10, 10);  // joystick X → vel.x
+      joyY = map(Number(parts[1]), 0, 1023, -50, 50);  // joystick Y → salto
+      joyBtn = Number(parts[2]);                       // botón
+    }
+  }
+}
+ 
+function serialError(err) {
+  console.log('Something went wrong with the serial port. ' + err);
+}
+ 
+function portClose() {
+  console.log('The serial port closed.');
 }
 
 function update() {
    image(backgroundImg,0,0,windowWidth,windowHeight);
-      playerSprite.rotation = 0;
-
+    playerSprite.rotation = 0;
+	print(joyX)
 //Sistema de Vidas
    if(lives == 3){
    	image(heart,width-100,50,50,50);
@@ -200,4 +254,34 @@ function update() {
    	obstacles[1].x = -1000;
    	obstacles[2].x = -1000;
    }
+
+   // --- Movimiento con Joystick ---
+playerSprite.velocity.x = joyX;  // mueve en X
+
+// saltar si joystick hacia arriba y está en el piso
+if (joyY < -25 && jumpSwitch) {
+  playerSprite.velocity.y = joyY; 
+  playerSprite.changeAni('jumping');
+  jumpSwitch = false;
+} else if (joyX < -2) {
+  playerSprite.changeAni('left');
+} else if (joyX > 2) {
+  playerSprite.changeAni('right');
+} else {
+  playerSprite.changeAni('standing');
+  playerSprite.velocity.x = 0;
+}
+
+// cambiar color o acción con el botón
+if (joyBtn === 0) {
+  playerSprite.tint = color(255, 0, 0);
+} else {
+  playerSprite.tint = color(255, 255, 255);
+}
+
+
+   
+
+
+
 }
