@@ -14,7 +14,7 @@ let lives = 3;
 let gameOver;
 let gameOverSwitch = false;
 let serial;
-let portName = 'COM3'; 
+let portName = 'COM20'; 
 let joyX = 0;
 let joyY = 0;
 let joyBtn = 1;  // 0 = presionado
@@ -285,3 +285,4 @@ if (joyBtn === 0) {
 
 
 }
+
